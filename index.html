@@ -1,0 +1,222 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HMC 2026 | Laboratorio de carteras</title><style>
+:root{--navy:#08233f;--teal:#087f84;--bg:#f3f6fa;--line:#dce4ec;--muted:#667587}*{box-sizing:border-box}body{margin:0;font:15px Arial,Segoe UI,sans-serif;background:var(--bg);color:#203045}header{background:linear-gradient(110deg,#061b32,#123e5b);color:white;padding:26px max(3vw,18px)}header h1{margin:4px 0;font-size:29px}header p{color:#c5dbe6;margin:6px 0}nav{display:flex;gap:7px;overflow:auto;background:white;padding:12px 3vw;position:sticky;top:0;z-index:3;border-bottom:1px solid var(--line)}nav button,.btn{border:0;border-radius:10px;padding:11px 15px;font-weight:bold;cursor:pointer;background:#e9f0f5;color:var(--navy)}nav button.active,.btn.primary{background:var(--teal);color:white}main{max-width:1450px;margin:22px auto;padding:0 18px}.page{display:none}.page.active{display:block}.card{background:white;border:1px solid var(--line);border-radius:17px;padding:20px;margin-bottom:18px;box-shadow:0 4px 15px #14283c0a}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.kpi{background:#fff;border:1px solid var(--line);border-radius:15px;padding:17px}.kpi small{display:block;color:var(--muted)}.kpi b{display:block;font-size:29px;margin-top:7px;color:var(--navy)}table{border-collapse:collapse;width:100%;font-size:13px}td,th{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left}th{background:#eef3f8}input[type=number],input[type=text],select{width:100%;border:1px solid #cbd7e2;border-radius:8px;padding:8px;background:white;color:#15314b}input[type=number]{min-width:66px}input[type=range]{width:100%;accent-color:var(--teal)}.scroll{overflow:auto}.scroll table{min-width:800px}.note{color:var(--muted);line-height:1.6;font-size:13px}.controls{display:flex;gap:12px;flex-wrap:wrap;align-items:end}.controls label{font-size:12px;font-weight:bold;color:var(--muted);display:block}.controls>div{min-width:150px;flex:1}svg{width:100%;height:auto;display:block}h2{margin:4px 0 14px;color:var(--navy)}h3{color:var(--navy)}.pill{display:inline-block;border-radius:20px;background:#e7f4f2;padding:6px 10px;font-size:12px;color:#006c71}.warn{background:#fff6e8;border:1px solid #f2dbb1;padding:12px;border-radius:10px;color:#79551d}.alloc{display:grid;gap:10px}.allocline{display:grid;grid-template-columns:170px 1fr 55px;align-items:center;gap:9px}.track{background:#e8eff5;height:13px;border-radius:10px;overflow:hidden}.fill{height:100%;background:var(--teal)}.sections{display:grid;grid-template-columns:1fr 1fr;gap:14px}.section{background:white;border:1px solid var(--line);border-radius:14px;padding:17px}.section p{line-height:1.55;color:#526375}button:hover{filter:brightness(.95)}@media(max-width:900px){.grid,.sections{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.allocline{grid-template-columns:110px 1fr 48px}}@media(max-width:550px){.kpis{grid-template-columns:1fr 1fr}.kpi b{font-size:22px}}
+.pie-layout{display:grid;grid-template-columns:minmax(180px,1fr) minmax(180px,1fr);align-items:center;gap:15px}.pie-legend{display:grid;gap:12px}.pie-legend-item{display:flex;align-items:center;gap:9px;font-size:13px}.pie-swatch{width:13px;height:13px;border-radius:4px;flex:none}.pie-legend-item strong{margin-left:auto;white-space:nowrap}.pie-label{font-weight:bold;fill:#123e5b;font-size:21px}.pie-caption{fill:#667587;font-size:12px}@media(max-width:680px){.pie-layout{grid-template-columns:1fr}.pie-layout svg{max-width:320px;margin:auto}}
+</style></head><body><header><div style="font-size:12px;letter-spacing:2px;color:#8ad5dc">UNIVERSIDAD ORT · GERENCIAMIENTO DE ACTIVOS</div><h1>Harvard Management Company · Laboratorio 2026</h1><p>Optimización de seis activos · Sensibilidad · Frontera eficiente · Política de inversión</p></header><nav><button class="active" onclick="page('sim',this)">◉ Simulador y sensibilidad</button><button onclick="page('mat',this)">Matriz de correlaciones</button><button onclick="page('info',this)">Los 10 puntos del informe</button></nav><main><section id="sim" class="page active"><div class="card"><h2>Simulador de sensibilidad</h2><p class="note">Al modificar el retorno objetivo, se selecciona automáticamente «Mínimo riesgo para retorno exacto». Para maximizar Sharpe sin objetivo, elegí ese modo en el selector.</p><p class="note">Valores iniciales extraídos de la hoja «Punto 2 DEF» del Excel compartido. Son datos de trabajo, no estimaciones verificadas de mercado a noviembre de 2026. Los cambios se calculan localmente en tu navegador.</p><div class="controls"><div><label>Tasa libre de riesgo real anual (%)</label><input id="rf" type="number" value="0.82" step="0.1"></div><div><label>Retorno objetivo real anual (%)</label><input id="target" type="number" value="5" step="any"></div><div><label>Tipo de cartera</label><select id="mode"><option value="sharpe">Máximo Sharpe</option><option value="minvar">Mínima varianza</option><option value="target">Mínimo riesgo para retorno exacto</option></select></div><div><label>Restricciones predefinidas</label><select id="preset"><option value="custom">Personalizadas</option><option value="free">0–100% sin cortos</option><option value="cap">Máximo 35% por activo</option><option value="balanced">Mínimo 5% / máximo 40%</option></select></div></div><div style="margin:16px 0;display:flex;gap:10px;flex-wrap:wrap"><button class="btn primary" onclick="calculate()">Recalcular cartera</button><button class="btn" onclick="showOptimal()">Óptimo (máx. Sharpe)</button><button class="btn" onclick="reset()">Volver a datos originales</button></div><div id="error" class="warn" style="display:none"></div><div class="scroll"><table><thead><tr><th>Activo</th><th>Benchmark / proxy (editable)</th><th>Retorno (%)</th><th>Volatilidad (%)</th><th>Mín. (%)</th><th>Máx. (%)</th></tr></thead><tbody id="assets"></tbody></table></div><p class="note">Todos los retornos, volatilidades y la tasa libre de riesgo deben estar expresados en términos reales y anualizados. Los benchmarks son campos para documentar los índices efectivamente usados en el Excel/Colab; no se presuponen índices no verificados.</p></div><div class="kpis"><div class="kpi"><small>Retorno esperado real</small><b id="kr">—</b></div><div class="kpi"><small>Volatilidad anual</small><b id="kv">—</b></div><div class="kpi"><small>Ratio de Sharpe</small><b id="ks">—</b></div><div class="kpi"><small>Exceso sobre tasa libre de riesgo</small><b id="ke">—</b></div></div><div class="grid" style="margin-top:18px"><div class="card"><h2>Frontera eficiente</h2><svg id="chart" viewBox="0 0 660 390" aria-label="Gráfico de retorno frente a volatilidad"></svg><p class="note">Arrastrá el punto destacado sobre la curva para explorar carteras y ver sus datos en tiempo real. Usá «Óptimo» para regresar a la cartera de máximo Sharpe. En el modo retorno objetivo, la cartera y la curva se calculan con igualdad de rendimiento mediante optimización cuadrática con restricciones. Contrastá los resultados con Excel/Colab.</p></div><div class="card"><h2>Composición de la cartera</h2><div class="pie-layout"><svg id="pie" viewBox="0 0 320 320" role="img" aria-label="Gráfico circular de composición de la cartera"></svg><div id="alloc" class="pie-legend"></div></div><p class="note" id="sum"></p></div></div><div class="grid"><div class="card"><h2>Sensibilidad del retorno esperado</h2><p class="note">Impacto en el Sharpe de la cartera elegida, manteniendo sus ponderaciones constantes.</p><div class="controls"><div><label>Activo a estresar</label><select id="shockasset"></select></div><div><label>Variación de retorno (puntos porcentuales)</label><input id="shock" type="range" min="-5" max="5" step="0.25" value="0"><strong id="shockval">0,00 pp</strong></div></div><div id="shockout" style="font-size:22px;font-weight:bold;margin-top:15px"></div><button class="btn" onclick="applyShock()">Aplicar cambio y reoptimizar</button></div><div class="card"><h2>Comparación de restricciones</h2><p class="note">Compará cómo los límites de concentración alteran la frontera y el Sharpe. Se recalcula con los supuestos actuales.</p><div id="compare" class="scroll"></div></div></section><section id="mat" class="page"><div class="card"><h2>Correlaciones editables</h2><p class="note">Matriz inicial de «Punto 2 DEF». Cada cambio se refleja simétricamente y actualiza la covarianza como σᵢ σⱼ ρᵢⱼ. No se permiten correlaciones fuera de [−1,1]. Si la matriz modificada deja de ser semidefinida positiva, el simulador lo advierte.</p><div id="matrix" class="scroll"></div><div style="margin-top:14px"><button class="btn primary" onclick="calculate()">Actualizar optimización</button></div><p id="matrixstatus" class="note"></p></div></section><section id="info" class="page"><h2>Los diez puntos del informe académico</h2><div class="sections" id="sections"></div></section></main><script>
+
+const names=["Acciones domésticas (EE.UU.)","Acciones extranjeras","Commodities","Bonos domésticos","Bonos indexados (TIPS)","Cash"];
+const bench=["SPY","EFA","DBC","IEF","TIP","BIL"];
+const mu0=[8.2138,6.8198,5.5213,1.0061,1.7081,.8234];
+const sd0=[15.1544,14.9378,16.9109,7.3369,5.7377,1.2725];
+const corr0=[[1,.7863,.3039,.1578,.3981,.0496],[.7863,1,.3411,.2442,.4388,.1246],[.3039,.3411,1,-.2713,.0056,-.2539],[.1578,.2442,-.2713,1,.791,.3208],[.3981,.4388,.0056,.791,1,.2476],[.0496,.1246,-.2539,.3208,.2476,1]];
+let corr=corr0.map(r=>r.slice()),solution=null,frontier=[], current=null,plotScale=null,dragging=false;
+const $=id=>document.getElementById(id);
+const fmt=x=>Number(x).toFixed(2).replace('.',',')+'%';
+function page(id,el){document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));el.classList.add('active')}
+function renderAssets(reset=true){
+ $('assets').innerHTML=names.map((n,i)=>`<tr><td><b>${n}</b></td><td><input data-b="${i}" value="${bench[i]}"></td><td><input type="number" step=".1" data-m="${i}" value="${mu0[i]}"></td><td><input type="number" step=".1" data-s="${i}" value="${sd0[i]}"></td><td><input type="number" step="1" data-l="${i}" value="5"></td><td><input type="number" step="1" data-h="${i}" value="40"></td></tr>`).join('');
+ $('shockasset').innerHTML=names.map((n,i)=>`<option value="${i}">${n}</option>`).join('');
+}
+function getData(){
+ const take=(k,i)=>Number(document.querySelector(`[data-${k}="${i}"]`).value);
+ let d={mu:names.map((_,i)=>take('m',i)),sd:names.map((_,i)=>take('s',i)),lo:names.map((_,i)=>take('l',i)/100),hi:names.map((_,i)=>take('h',i)/100),rf:Number($('rf').value),target:Number($('target').value)};
+ if([...d.mu,...d.sd,...d.lo,...d.hi,d.rf,d.target].some(x=>!Number.isFinite(x)))throw Error('Hay valores numéricos inválidos.');
+ if(d.sd.some(x=>x<=0)||d.lo.some((x,i)=>x<0||x>d.hi[i]||d.hi[i]>1))throw Error('Revisá volatilidades y límites: 0 ≤ mínimo ≤ máximo ≤ 100%.');
+ if(d.lo.reduce((a,b)=>a+b,0)>1.000001||d.hi.reduce((a,b)=>a+b,0)<.999999)throw Error('Restricciones inviables: los mínimos deben sumar como máximo 100% y los máximos como mínimo 100%.');
+ return d;
+}
+function metric(w,d){
+ let r=w.reduce((a,x,i)=>a+x*d.mu[i],0),v=0;
+ for(let i=0;i<6;i++)for(let j=0;j<6;j++)v+=w[i]*w[j]*d.sd[i]*d.sd[j]*corr[i][j];
+ let s=Math.sqrt(Math.max(v,0));
+ return {ret:r,vol:s,sharpe:s>1e-9?(r-d.rf)/s:-999};
+}
+function allocate(d,seed){
+ let w=d.lo.slice(),rem=1-w.reduce((a,b)=>a+b,0),ids=[0,1,2,3,4,5];
+ // deterministic pseudo-random order and amounts; every returned portfolio satisfies all bounds
+ for(let k=5;k>0;k--){let j=Math.floor(seed()*(k+1));[ids[k],ids[j]]=[ids[j],ids[k]]}
+ for(let j=0;j<6;j++){let i=ids[j],capacity=d.hi[i]-w[i],other=ids.slice(j+1).reduce((a,k)=>a+d.hi[k]-w[k],0);
+ let low=Math.max(0,rem-other),high=Math.min(rem,capacity),add=j===5?rem:low+(high-low)*seed();
+ add=Math.max(0,Math.min(capacity,add));w[i]+=add;rem-=add}
+ if(Math.abs(rem)>1e-7)return null;
+ return w;
+}
+// Active-set quadratic programming: enumerate fixed lower/upper/free weights.
+// For six assets this requires at most 729 small linear systems, no external libraries.
+function solveLinear(A,b){
+ const n=b.length,M=A.map((row,i)=>row.slice().concat(b[i]));
+ for(let k=0;k<n;k++){
+  let pivot=k;for(let i=k+1;i<n;i++)if(Math.abs(M[i][k])>Math.abs(M[pivot][k]))pivot=i;
+  if(Math.abs(M[pivot][k])<1e-10)return null;
+  [M[k],M[pivot]]=[M[pivot],M[k]];
+  let q=M[k][k];for(let j=k;j<=n;j++)M[k][j]/=q;
+  for(let i=0;i<n;i++)if(i!==k){let z=M[i][k];for(let j=k;j<=n;j++)M[i][j]-=z*M[k][j]}
+ }
+ return M.map(r=>r[n]);
+}
+function extremeReturn(d,maximize){
+ let w=d.lo.slice(),remaining=1-w.reduce((a,b)=>a+b,0);
+ let ids=[0,1,2,3,4,5].sort((a,b)=>maximize?d.mu[b]-d.mu[a]:d.mu[a]-d.mu[b]);
+ for(const i of ids){let add=Math.min(remaining,d.hi[i]-w[i]);w[i]+=add;remaining-=add}
+ return w.reduce((sum,x,i)=>sum+x*d.mu[i],0);
+}
+function exactMinVar(d,target){
+ let best=null,bestVariance=Infinity;
+ const C=d.sd.map((si,i)=>d.sd.map((sj,j)=>si*sj*corr[i][j]));
+ const states=729;
+ for(let state=0;state<states;state++){
+  let code=state,free=[],w=Array(6).fill(0);
+  for(let i=0;i<6;i++){let z=code%3;code=Math.floor(code/3);if(z===0)w[i]=d.lo[i];else if(z===1)w[i]=d.hi[i];else free.push(i)}
+  let mass=1-w.reduce((a,b)=>a+b,0),ret=target-w.reduce((a,x,i)=>a+x*d.mu[i],0);
+  if(!free.length){if(Math.abs(mass)>1e-7||Math.abs(ret)>1e-6)continue}
+  else if(free.length===1){
+   const i=free[0];w[i]=mass;
+   if(Math.abs(d.mu[i]*mass-ret)>1e-5)continue;
+  }
+  else if(free.length===2){
+   const [i,j]=free,den=d.mu[i]-d.mu[j];
+   if(Math.abs(den)<1e-12)continue;
+   w[i]=(ret-d.mu[j]*mass)/den;w[j]=mass-w[i];
+  }
+  else{
+   let n=free.length,mat=[],rhs=[];
+   for(let a=0;a<n;a++){
+    let i=free[a];mat.push(free.map(j=>C[i][j]).concat([1,d.mu[i]]));
+    rhs.push(-w.reduce((sum,x,j)=>sum+C[i][j]*x,0));
+   }
+   mat.push(Array(n).fill(1).concat([0,0]));rhs.push(mass);
+   mat.push(free.map(i=>d.mu[i]).concat([0,0]));rhs.push(ret);
+   let sol=solveLinear(mat,rhs);if(!sol)continue;
+   for(let a=0;a<n;a++)w[free[a]]=sol[a];
+  }
+  if(w.some((x,i)=>x<d.lo[i]-1e-7||x>d.hi[i]+1e-7))continue;
+  if(Math.abs(w.reduce((a,b)=>a+b,0)-1)>1e-6)continue;
+  if(Math.abs(w.reduce((a,x,i)=>a+x*d.mu[i],0)-target)>1e-5)continue;
+  let variance=0;for(let i=0;i<6;i++)for(let j=0;j<6;j++)variance+=w[i]*C[i][j]*w[j];
+  if(variance<bestVariance){bestVariance=variance;best=w.slice()}
+ }
+ return best?{w:best,m:metric(best,d)}:null;
+}
+
+function maxSharpeExact(d){
+ const minR=extremeReturn(d,false),maxR=extremeReturn(d,true);
+ // Deterministic one-dimensional search over the minimum-variance frontier.
+ let best=null;
+ const evaluate=r=>{let q=exactMinVar(d,r);if(q&&(!best||q.m.sharpe>best.m.sharpe))best=q;return q?q.m.sharpe:-Infinity};
+ const steps=48;
+ for(let k=0;k<=steps;k++)evaluate(minR+(maxR-minR)*k/steps);
+ if(!best)return null;
+ let center=best.m.ret,step=(maxR-minR)/steps;
+ let lo=Math.max(minR,center-step),hi=Math.min(maxR,center+step);
+ for(let k=0;k<22;k++){let l=lo+(hi-lo)*.382,h=lo+(hi-lo)*.618;
+ if(evaluate(l)>evaluate(h))hi=h;else lo=l;}
+ evaluate((lo+hi)/2);
+ return best;
+}
+function showOptimal(){
+ $('mode').value='sharpe';
+ calculate();
+ if(solution && $('error').style.display==='none') $('target').value=solution.m.ret.toFixed(2);
+}
+const pieColors=['#087f84','#ed9c3c','#486db3','#9c6cbd','#d95e76','#63a58a'];
+function renderComposition(weights){
+ const total=weights.reduce((a,b)=>a+b,0),cx=160,cy=160,r=118,inner=65;
+ let start=-Math.PI/2,parts=[];
+ weights.forEach((w,i)=>{
+  const angle=2*Math.PI*w/total,end=start+angle;
+  const point=(rad,theta)=>[cx+rad*Math.cos(theta),cy+rad*Math.sin(theta)];
+  const [x1,y1]=point(r,start),[x2,y2]=point(r,end),[x3,y3]=point(inner,end),[x4,y4]=point(inner,start);
+  const large=angle>Math.PI?1:0;
+  const path=`M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} L ${x3} ${y3} A ${inner} ${inner} 0 ${large} 0 ${x4} ${y4} Z`;
+  parts.push(`<path d="${path}" fill="${pieColors[i]}" stroke="white" stroke-width="2"><title>${names[i]}: ${fmt(w*100)}</title></path>`);
+  start=end;
+ });
+ parts.push(`<text x="160" y="153" text-anchor="middle" class="pie-label">100%</text><text x="160" y="174" text-anchor="middle" class="pie-caption">de la cartera</text>`);
+ $('pie').innerHTML=parts.join('');
+ $('alloc').innerHTML=names.map((n,i)=>`<div class="pie-legend-item"><span class="pie-swatch" style="background:${pieColors[i]}"></span><span>${n}</span><strong>${fmt(weights[i]*100)}</strong></div>`).join('');
+}
+function updateResult(q,fromDrag=false){
+ if(!q)return;
+ solution=q;
+ $('kr').textContent=fmt(q.m.ret);$('kv').textContent=fmt(q.m.vol);
+ $('ks').textContent=q.m.sharpe.toFixed(3);$('ke').textContent=fmt(q.m.ret-current.rf);
+ renderComposition(q.w);
+ $('sum').textContent='Suma de ponderaciones: '+fmt(q.w.reduce((a,b)=>a+b,0)*100);
+ if(fromDrag){$('target').value=q.m.ret.toFixed(3);$('mode').value='target'}
+ draw();shockUpdate();
+}
+function calculate(){
+ $('error').style.display='none';$('error').textContent='';
+ try{
+ const d=getData();current=d;
+ const minR=extremeReturn(d,false),maxR=extremeReturn(d,true),mode=$('mode').value;
+ let q;
+ if(mode==='target'){
+  if(d.target<minR-0.011||d.target>maxR+0.011)throw Error(`Retorno objetivo no alcanzable. El rango posible es ${fmt(minR)} a ${fmt(maxR)}.`);
+  const effectiveTarget=Math.max(minR,Math.min(maxR,d.target));
+  q=exactMinVar(d,effectiveTarget);
+  if(Math.abs(effectiveTarget-d.target)>1e-8)$('target').value=effectiveTarget.toFixed(4);
+ }else if(mode==='sharpe')q=maxSharpeExact(d);
+ else{
+  // Minimum variance without a prescribed return: scan then refine the frontier.
+  let best=null;
+  for(let k=0;k<=64;k++){let v=exactMinVar(d,minR+(maxR-minR)*k/64);if(v&&(!best||v.m.vol<best.m.vol))best=v}
+  if(best){let delta=(maxR-minR)/64,lo=Math.max(minR,best.m.ret-delta),hi=Math.min(maxR,best.m.ret+delta);
+   for(let k=0;k<20;k++){let l=lo+(hi-lo)*.382,h=lo+(hi-lo)*.618;
+    let ql=exactMinVar(d,l),qh=exactMinVar(d,h);
+    if(ql&&qh&&ql.m.vol<qh.m.vol)hi=h;else lo=l}
+   q=exactMinVar(d,(lo+hi)/2)||best;
+  }
+ }
+ if(!q)throw Error('No se pudo calcular una cartera para ese retorno. Revisá las restricciones y la matriz de correlaciones.');
+ frontier=[];
+ for(let k=0;k<=45;k++){let r=minR+(maxR-minR)*k/45,v=exactMinVar(d,r);if(v)frontier.push(v.m)}
+ if(!frontier.length)frontier=[q.m];
+ updateResult(q);
+ $('compare').innerHTML=`<p class="note">Rango factible: ${fmt(minR)} a ${fmt(maxR)}. ${mode==='sharpe'?'Se seleccionó el máximo Sharpe de la frontera.':'Podés arrastrar el punto sobre la curva para cambiar el retorno.'}</p>`;
+ $('matrixstatus').textContent='Cálculo realizado con restricciones de pesos y retorno exacto cuando corresponde.';
+ }catch(e){$('error').textContent=e.message;$('error').style.display='block'}
+}
+function draw(){
+ if(!solution)return;
+ const pts=frontier.concat([solution.m]),xmin=Math.min(...pts.map(p=>p.vol)),xmax=Math.max(...pts.map(p=>p.vol)),ymin=Math.min(...pts.map(p=>p.ret)),ymax=Math.max(...pts.map(p=>p.ret));
+ const x=v=>65+540*(v-xmin)/(xmax-xmin||1),y=v=>330-260*(v-ymin)/(ymax-ymin||1);
+ plotScale={xmin,xmax,ymin,ymax,x,y};
+ let svg='<rect width="660" height="390" fill="white"/><path d="M65 55 V330 H615" fill="none" stroke="#9daeba"/>';
+ for(let i=0;i<=4;i++){let xx=65+i*135,yy=330-i*65;svg+=`<text x="${xx}" y="350" text-anchor="middle" font-size="12">${(xmin+(xmax-xmin)*i/4).toFixed(1)}%</text><text x="54" y="${yy+4}" text-anchor="end" font-size="12">${(ymin+(ymax-ymin)*i/4).toFixed(1)}%</text>`}
+ svg+=`<text x="340" y="380" text-anchor="middle">Volatilidad anual</text><text x="20" y="190" transform="rotate(-90 20 190)" text-anchor="middle">Retorno esperado</text>`;
+ const ordered=frontier.slice().sort((a,b)=>a.ret-b.ret);
+ svg+=`<polyline fill="none" stroke="#087f84" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" points="${ordered.map(p=>x(p.vol)+','+y(p.ret)).join(' ')}"/>`;
+ svg+=`<circle cx="${x(solution.m.vol)}" cy="${y(solution.m.ret)}" r="10" fill="#e76f35" stroke="white" stroke-width="3" style="cursor:grab"/>`;
+ svg+=`<text x="${Math.min(580,x(solution.m.vol)+13)}" y="${Math.max(45,y(solution.m.ret)-14)}" font-size="12" font-weight="bold" fill="#b9471e">${fmt(solution.m.ret)} · Sharpe ${solution.m.sharpe.toFixed(3)}</text>`;
+ $('chart').innerHTML=svg;
+}
+function dragOnChart(event){
+ if(!current||!plotScale)return;
+ const svg=$('chart'),rect=svg.getBoundingClientRect();
+ const ysvg=(event.clientY-rect.top)*390/rect.height;
+ let target=plotScale.ymin+(330-ysvg)/260*(plotScale.ymax-plotScale.ymin);
+ target=Math.max(extremeReturn(current,false),Math.min(extremeReturn(current,true),target));
+ let q=exactMinVar(current,target);
+ if(q)updateResult(q,true);
+}
+const chartEl=$('chart');
+chartEl.style.touchAction='none';
+chartEl.addEventListener('pointerdown',e=>{dragging=true;chartEl.setPointerCapture(e.pointerId);dragOnChart(e)});
+chartEl.addEventListener('pointermove',e=>{if(dragging)dragOnChart(e)});
+chartEl.addEventListener('pointerup',()=>dragging=false);
+chartEl.addEventListener('pointercancel',()=>dragging=false);
+function shockUpdate(){if(!solution)return;let i=Number($('shockasset').value),delta=Number($('shock').value),r=solution.m.ret+solution.w[i]*delta,sh=(r-current.rf)/solution.m.vol;$('shockval').textContent=delta.toFixed(2)+' pp';$('shockout').textContent=`Sharpe: ${solution.m.sharpe.toFixed(3)} → ${sh.toFixed(3)} | Retorno: ${fmt(solution.m.ret)} → ${fmt(r)}`}
+function applyShock(){let i=Number($('shockasset').value),el=document.querySelector(`[data-m="${i}"]`);el.value=Number(el.value)+Number($('shock').value);$('shock').value=0;calculate()}
+function preset(){let p=$('preset').value;if(p==='custom')return;let l=p==='balanced'?5:0,h=p==='cap'?35:p==='balanced'?40:100;for(let i=0;i<6;i++){document.querySelector(`[data-l="${i}"]`).value=l;document.querySelector(`[data-h="${i}"]`).value=h}calculate()}
+function reset(){corr=corr0.map(r=>r.slice());$('rf').value=.8234;$('target').value=4.84;$('preset').value='balanced';$('mode').value='sharpe';renderAssets();matrixRender();$('shock').value=0;calculate()}
+function matrixRender(){
+ $('matrix').innerHTML=`<table><thead><tr><th>Activo</th>${names.map(n=>`<th>${n}</th>`).join('')}</tr></thead><tbody>${names.map((n,i)=>`<tr><th>${n}</th>${names.map((_,j)=>`<td>${i===j?'1,000':`<input type="number" min="-1" max="1" step=".01" style="width:72px" data-c="${i}-${j}" value="${corr[i][j].toFixed(3)}">`}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+ document.querySelectorAll('[data-c]').forEach(el=>el.addEventListener('change',()=>{let [i,j]=el.dataset.c.split('-').map(Number),v=Number(el.value);if(!Number.isFinite(v)||v< -1||v>1){alert('Correlación fuera de rango');return}corr[i][j]=corr[j][i]=v;matrixRender()}));
+}
+const titles=['1. Contexto y objetivos de Harvard','2. Selección de seis categorías con datos de 1999','3. Nueva selección de seis categorías en 2026','4. Benchmarks de las seis categorías actuales','5. Ventana de 96 meses y exclusión de pandemia','6. Rendimientos, volatilidades y correlaciones','7. Optimización y restricciones alternativas','8. Sensibilidad y escenarios adversos','9. Política recomendada al Directorio','10. Conclusiones, limitaciones y anexos'];
+const desc=['Preservación real del endowment y necesidades de distribución.','Selección histórica fundamentada en información disponible en 1999.','Selección actual distinta y justificación económica.','SPY, EFA, DBC, IEF, TIP y BIL: cobertura y representatividad.','Especificar 96 meses y meses excluidos; comparar sensibilidad con pandemia.','Supuestos prospectivos y matriz de covarianzas.','Frontera eficiente y restricciones alternativas.','Cambios de retornos, volatilidad, correlación y límites.','Propuesta y fundamentos para el Directorio.','Limitaciones, fuentes y contrastación con Excel y Colab.'];
+$('sections').innerHTML=titles.map((t,i)=>`<article class="section"><h3>${t}</h3><p>${desc[i]}</p></article>`).join('');
+$('preset').addEventListener('change',preset);$('shock').addEventListener('input',shockUpdate);$('shockasset').addEventListener('change',shockUpdate);$('mode').addEventListener('change',calculate);$('target').addEventListener('change',()=>{$('mode').value='target';calculate()});$('target').addEventListener('keydown',e=>{if(e.key==='Enter'){$('mode').value='target';calculate()}});
+renderAssets();matrixRender();$('mode').value='sharpe';calculate();
+
+</script></body></html>
